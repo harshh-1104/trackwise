@@ -1,0 +1,152 @@
+{% extends 'base.html' %}
+{% block title %}Financial Analytics{% endblock %}
+
+{% block content %}
+<div class="px-4 md:px-8 py-10 max-w-7xl mx-auto w-full space-y-10 mb-20 md:mb-0">
+    <!-- Header Section -->
+    <div class="flex flex-col md:flex-row md:items-end justify-between gap-6">
+        <div>
+            <h2 class="text-3xl md:text-5xl font-extrabold text-slate-800 tracking-tight mb-2">Financial Analytics</h2>
+            <div class="flex items-center gap-4 mt-4">
+                <a href="?month={{ prev_month }}&year={{ prev_year }}" class="p-2 rounded-xl bg-white border border-slate-100 text-slate-400 hover:text-slate-800 hover:border-slate-300 transition-all shadow-sm flex items-center justify-center active:scale-90" title="Previous Month">
+                    <span class="material-symbols-outlined text-[20px]">chevron_left</span>
+                </a>
+                <div class="px-5 py-2 bg-white rounded-2xl border border-slate-100 shadow-sm flex items-center gap-3">
+                    <span class="material-symbols-outlined text-slate-400 text-[20px]">calendar_month</span>
+                    <span class="text-sm font-bold text-slate-700 tracking-tight">{{ current_month_name }} {{ current_year }}</span>
+                </div>
+                <a href="?month={{ next_month }}&year={{ next_year }}" class="p-2 rounded-xl bg-white border border-slate-100 text-slate-400 hover:text-slate-800 hover:border-slate-300 transition-all shadow-sm flex items-center justify-center active:scale-90" title="Next Month">
+                    <span class="material-symbols-outlined text-[20px]">chevron_right</span>
+                </a>
+                {% if not is_current_period %}
+                <a href="{% url 'trackwise_reports' %}" class="text-[10px] font-bold text-indigo-600 uppercase tracking-widest hover:underline ms-2">Back to Now</a>
+                {% endif %}
+            </div>
+        </div>
+        <div class="flex items-center gap-3 bg-white p-2 rounded-2xl shadow-sm border border-slate-100">
+            <div class="px-4 py-2 bg-slate-50 rounded-xl text-xs font-bold text-slate-500 uppercase tracking-widest">{% now "F Y" %}</div>
+        </div>
+    </div>
+
+    <!-- Main Bento Grid -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        
+        <!-- Left Column: Financial Health & Breakdown -->
+        <div class="lg:col-span-2 space-y-8">
+            
+            <!-- Quick Summary Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Savings Rate Card -->
+                <div class="bg-white p-8 rounded-[2.5rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100 relative overflow-hidden group h-[16rem] flex flex-col justify-center">
+                    <div class="relative z-10">
+                        <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1 block">Savings Performance</span>
+                        <div class="flex items-end gap-3 mb-4">
+                            <h3 class="text-5xl font-black text-slate-800">{{ savings_rate }}%</h3>
+                            <span class="text-sm font-bold text-emerald-500 mb-2 flex items-center">
+                                <span class="material-symbols-outlined text-[18px]">trending_up</span> Good
+                            </span>
+                        </div>
+                        <p class="text-xs text-slate-500 font-medium leading-relaxed">You are saving <strong>₹{{ savings }}</strong> this month. A rate above 20% is considered architecturally sound.</p>
+                    </div>
+                    <div class="absolute -right-8 -bottom-8 w-32 h-32 bg-emerald-500/5 rounded-full blur-2xl group-hover:bg-emerald-500/10 transition-all duration-700"></div>
+                </div>
+
+                <!-- Top Spending Card -->
+                <div class="bg-white p-8 rounded-[2.5rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100 relative overflow-hidden group h-[16rem] flex flex-col justify-center">
+                    <div class="relative z-10">
+                        <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1 block">Primary Expense Drain</span>
+                        {% if top_category %}
+                        <div class="flex items-center gap-4 mt-2">
+                            <div class="w-14 h-14 rounded-2xl flex items-center justify-center {{ top_category.color }} shadow-sm">
+                                <span class="material-symbols-outlined text-2xl font-bold">{{ top_category.icon }}</span>
+                            </div>
+                            <div>
+                                <h4 class="text-xl font-extrabold text-slate-800">{{ top_category.name }}</h4>
+                                <p class="text-xs text-rose-500 font-bold uppercase tracking-widest">{{ top_category.percentage }}% of total spend</p>
+                            </div>
+                        </div>
+                        {% else %}
+                        <p class="text-slate-400 font-medium mt-4 italic">No expense data for this month.</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Category Distribution List -->
+            <div class="bg-white p-8 rounded-[2.5rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100">
+                <div class="flex items-center justify-between mb-8">
+                    <h3 class="text-xl font-bold text-slate-800">Expense Distribution</h3>
+                    <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">by category</span>
+                </div>
+                
+                <div class="space-y-6">
+                    {% for cat in category_expenses %}
+                    <div class="space-y-2">
+                        <div class="flex justify-between items-center text-sm">
+                            <div class="flex items-center gap-3">
+                                <span class="material-symbols-outlined text-slate-400 text-[18px]">{{ cat.icon }}</span>
+                                <span class="font-bold text-slate-700">{{ cat.name }}</span>
+                            </div>
+                            <span class="font-bold text-slate-800">₹{{ cat.amount }} <span class="text-slate-400 text-xs font-medium ml-1">({{ cat.percentage }}%)</span></span>
+                        </div>
+                        <div class="w-full h-2 bg-slate-50 rounded-full overflow-hidden">
+                            <div class="h-full bg-slate-700 rounded-full" style="width: {{ cat.percentage }}%"></div>
+                        </div>
+                    </div>
+                    {% empty %}
+                    <div class="py-10 text-center text-slate-400 font-medium italic">Record some expenses to see a breakdown.</div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Column: Trends -->
+        <div class="space-y-8">
+            <!-- Monthly Trends Chart (CSS Based) -->
+            <div class="bg-white p-8 rounded-[2.5rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100 flex flex-col h-full">
+                <div class="mb-10">
+                    <h3 class="text-xl font-bold text-slate-800">Monthly Trends</h3>
+                    <p class="text-xs text-slate-400 font-medium mt-1">Income vs Expenses (Last 6 Months)</p>
+                </div>
+                
+                <div class="flex-1 flex items-end justify-between gap-2 min-h-[250px] px-2 mb-4 border-b border-slate-100 pb-2">
+                    {% for month in trends %}
+                    <div class="flex-1 flex flex-col items-center gap-1 group">
+                        <div class="flex gap-1 items-end w-full justify-center h-[200px]">
+                            <!-- Income Bar -->
+                            <div class="w-2.5 bg-slate-200 rounded-t-full relative group-hover:bg-emerald-400 transition-all cursor-help" style="height: {{ month.income_h }}%" title="Income: ₹{{ month.income }}"></div>
+                            <!-- Expense Bar -->
+                            <div class="w-2.5 bg-slate-800 rounded-t-full relative group-hover:bg-rose-400 transition-all cursor-help" style="height: {{ month.expense_h }}%" title="Expense: ₹{{ month.expense }}"></div>
+                        </div>
+                        <span class="text-[10px] font-bold text-slate-400 uppercase mt-2">{{ month.month }}</span>
+                    </div>
+                    {% endfor %}
+                </div>
+                
+                <!-- Legend -->
+                <div class="flex gap-6 mt-4">
+                    <div class="flex items-center gap-2">
+                        <div class="w-3 h-3 rounded-full bg-slate-200"></div>
+                        <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Income</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <div class="w-3 h-3 rounded-full bg-slate-800"></div>
+                        <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Expense</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Financial Pro Tip -->
+            <div class="bg-slate-800 p-8 rounded-[2.5rem] text-white shadow-xl relative overflow-hidden group">
+                <div class="relative z-10">
+                    <h4 class="font-bold mb-3 flex items-center gap-2">
+                        <span class="material-symbols-outlined text-slate-400">lightbulb</span> Architecture Tip
+                    </h4>
+                    <p class="text-xs text-slate-300 leading-relaxed font-medium">To optimize your financial structure, try to keep recurring expenses below 50% of your total income. Use the 50/30/20 rule for balanced growth.</p>
+                </div>
+                <div class="absolute -right-4 -bottom-4 w-24 h-24 bg-white/5 rounded-full blur-xl group-hover:bg-white/10 transition-all duration-700"></div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

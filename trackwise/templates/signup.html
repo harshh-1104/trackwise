@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% block title %}Sign Up{% endblock %}
+
+{% block content %}
+<div class="w-full max-w-md mx-auto z-10 py-10">
+    <div class="glass-panel p-10 rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] w-full transition-all duration-500 hover:shadow-[0_8px_30px_rgb(99,102,241,0.1)] relative overflow-hidden">
+        <!-- Decorative blob -->
+        <div class="absolute -top-32 -left-20 w-64 h-64 bg-emerald-500/10 rounded-full blur-3xl"></div>
+        <div class="absolute -bottom-32 -right-20 w-64 h-64 bg-indigo-500/10 rounded-full blur-3xl"></div>
+        
+        <div class="text-center mb-8 relative z-10">
+            <div class="w-16 h-16 rounded-3xl bg-indigo-600 bg-gradient-to-br from-indigo-500 to-indigo-700 mx-auto flex items-center justify-center text-white shadow-xl shadow-indigo-200 mb-6 transform hover:scale-105 transition-all duration-300">
+                <span class="material-symbols-outlined text-3xl">rocket_launch</span>
+            </div>
+            <h2 class="text-3xl font-extrabold text-slate-800 tracking-tight">Join TrackWise</h2>
+            <p class="text-slate-500 font-medium mt-2">Start your premium financial journey today.</p>
+        </div>
+        
+        {% if messages %}
+            {% for message in messages %}
+            <div class="bg-rose-50 border border-rose-100 text-rose-600 px-4 py-3 rounded-xl text-sm font-semibold mb-6 text-center flex items-center justify-center gap-2">
+                <span class="material-symbols-outlined text-[18px]">error</span>
+                {{ message }}
+            </div>
+            {% endfor %}
+        {% endif %}
+
+        <form method="post" class="space-y-4 relative z-10">
+            {% csrf_token %}
+            {% for field in form %}
+            <div>
+                <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2 ms-1">{{ field.label }}</label>
+                {{ field }}
+                {% if field.errors %}
+                <p class="text-rose-500 text-xs mt-1 font-medium ms-1">{{ field.errors.0 }}</p>
+                {% endif %}
+            </div>
+            {% endfor %}
+            <button type="submit" class="w-full bg-indigo-600 text-white py-4 rounded-xl font-bold mt-6 shadow-xl shadow-indigo-200 hover:bg-indigo-700 hover:shadow-indigo-300 hover:-translate-y-0.5 active:translate-y-0 active:shadow-md transition-all text-sm tracking-wide">
+                Create Account
+            </button>
+        </form>
+        
+        <div class="mt-8 text-center text-sm font-medium text-slate-500 relative z-10">
+            Already have an account? <a href="{% url 'trackwise_login' %}" class="text-indigo-600 font-bold hover:text-indigo-700 hover:underline underline-offset-4 decoration-2">Log in</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

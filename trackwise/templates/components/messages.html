@@ -1,0 +1,71 @@
+{% if messages %}
+<div class="fixed top-8 right-8 z-[200] flex flex-col items-end gap-3 pointer-events-none" id="notification-container">
+    {% for message in messages %}
+    <div class="notification-toast pointer-events-auto min-w-[320px] max-w-md group transition-all duration-500 animate-slide-in-right relative translate-x-0 opacity-100" data-type="{{ message.tags }}">
+        <div class="glass-panel overflow-hidden rounded-2xl shadow-[0_15px_40px_-10px_rgba(0,0,0,0.1)] border border-white/60 flex items-stretch">
+            <!-- Alert Accent Bar -->
+            {% if message.tags == 'success' %}
+            <div class="w-1.5 bg-emerald-500 shrink-0"></div>
+            {% elif message.tags == 'error' %}
+            <div class="w-1.5 bg-rose-500 shrink-0"></div>
+            {% else %}
+            <div class="w-1.5 bg-indigo-500 shrink-0"></div>
+            {% endif %}
+
+            <div class="p-4 flex items-center gap-4 w-full bg-white/80">
+                <div class="w-10 h-10 rounded-xl flex items-center justify-center shrink-0 
+                    {% if message.tags == 'success' %}bg-emerald-50 text-emerald-600{% elif message.tags == 'error' %}bg-rose-50 text-rose-600{% else %}bg-indigo-50 text-indigo-600{% endif %} shadow-sm">
+                    <span class="material-symbols-outlined text-[22px]">
+                        {% if message.tags == 'success' %}check_circle{% elif message.tags == 'error' %}error{% else %}info{% endif %}
+                    </span>
+                </div>
+                
+                <div class="flex-1 pr-2">
+                    <h5 class="text-[10px] font-black uppercase tracking-[0.2em] opacity-50 mb-0.5
+                        {% if message.tags == 'success' %}text-emerald-950{% elif message.tags == 'error' %}text-rose-950{% else %}text-indigo-950{% endif %}">
+                        {% if message.tags == 'success' %}Success{% elif message.tags == 'error' %}System Alert{% else %}Information{% endif %}
+                    </h5>
+                    <p class="text-[13px] font-bold text-slate-800 leading-snug">{{ message }}</p>
+                </div>
+
+                <button type="button" onclick="this.closest('.notification-toast').remove()" class="text-slate-300 hover:text-slate-500 transition-colors p-1">
+                    <span class="material-symbols-outlined text-[18px]">close</span>
+                </button>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<style>
+    @keyframes slide-in-right {
+        0% { transform: translateX(100%); opacity: 0; filter: blur(5px); }
+        100% { transform: translateX(0); opacity: 1; filter: blur(0); }
+    }
+    .animate-slide-in-right {
+        animation: slide-in-right 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    
+    .toast-exit {
+        transform: translateX(50px) !important;
+        opacity: 0 !important;
+        scale: 0.95 !important;
+        filter: blur(5px) !important;
+    }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const toasts = document.querySelectorAll('.notification-toast');
+        toasts.forEach(toast => {
+            // Auto dismissal after 6 seconds
+            setTimeout(() => {
+                if (toast && toast.parentNode) {
+                    toast.classList.add('toast-exit');
+                    setTimeout(() => toast.remove(), 600);
+                }
+            }, 6000);
+        });
+    });
+</script>
+{% endif %}

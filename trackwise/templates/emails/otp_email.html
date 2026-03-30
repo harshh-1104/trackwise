@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verify Your OTP | TrackWise</title>
+    <style>
+        body {
+            font-family: 'Outfit', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f8fafc;
+            color: #1e293b;
+        }
+        .container {
+            max-width: 600px;
+            margin: 40px auto;
+            background: #ffffff;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        .header {
+            background-color: #1e293b;
+            color: #ffffff;
+            padding: 40px 20px;
+            text-align: center;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 28px;
+            font-weight: 700;
+            letter-spacing: -0.025em;
+        }
+        .content {
+            padding: 40px 32px;
+            line-height: 1.6;
+        }
+        .content p {
+            font-size: 16px;
+            margin-bottom: 24px;
+        }
+        .otp-box {
+            background-color: #f1f5f9;
+            border: 2px dashed #cbd5e1;
+            border-radius: 12px;
+            padding: 24px;
+            text-align: center;
+            margin-bottom: 32px;
+        }
+        .otp-code {
+            font-size: 36px;
+            font-weight: 800;
+            letter-spacing: 0.25em;
+            color: #10b981;
+            margin: 0;
+        }
+        .footer {
+            padding: 32px;
+            text-align: center;
+            font-size: 14px;
+            color: #64748b;
+            background-color: #f8fafc;
+            border-top: 1px solid #e2e8f0;
+        }
+        .highlight {
+            color: #1e293b;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>TrackWise</h1>
+        </div>
+        <div class="content">
+            <p>Hello <span class="highlight">{{ first_name }}</span>,</p>
+            <p>Thank you for choosing TrackWise. To complete your registration and secure your finance tracker, please use the verification code below:</p>
+            
+            <div class="otp-box">
+                <p style="margin-top: 0; font-size: 14px; color: #64748b; text-transform: uppercase; font-weight: 600;">Verification Code</p>
+                <div class="otp-code">{{ otp }}</div>
+            </div>
+            
+            <p>This code will expire shortly. If you did not request this code, you can safely ignore this email.</p>
+            
+            <p>Welcome aboard,<br><span class="highlight">The TrackWise Team</span></p>
+        </div>
+        <div class="footer">
+            &copy; 2026 TrackWise Finance. All rights reserved.<br>
+            Managed personal finance with clarity and confidence.
+        </div>
+    </div>
+</body>
+</html>
