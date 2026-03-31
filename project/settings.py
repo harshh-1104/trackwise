@@ -129,13 +129,16 @@ PAYTM_CHANNEL_ID = 'WEB'
 PAYTM_INDUSTRY_TYPE_ID = 'Retail'
 
 
-#gmail otp 
+# Gmail OTP Configuration
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER', 'your_email@gmail.com')
-EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD', 'your_app_password')
+EMAIL_HOST_USER = 'chvharsh@gmail.com'
+# IMPORTANT: Generate an App Password from your Google Account settings 
+# (Security > 2-Step Verification > App Passwords) and paste it here.
+EMAIL_HOST_PASSWORD = 'xwit cyzj zisk xnln'
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/login/'
